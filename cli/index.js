@@ -17,13 +17,14 @@ const cli = meow(`
     --token, -t  Access token for private personas.
     --help       Show this help message.
     --version    Show version information.
-
+    --question -q ask question without connecting
   Examples
     $ chatapp init einstein
     $ chatapp init my_private_docs --token=XYZ123
     $ chatapp show persona
-    $ chatapp einstein show-data
+    $ chatapp einstein show-data -analytics
     $ chatapp
+    $ chatapp ask einstein -q "What is the meaning of life?" 
 `, {
   importMeta: import.meta,
   flags: {
@@ -34,6 +35,10 @@ const cli = meow(`
     question: {
       type: 'string',
       shortFlag: 'q'
+    },
+    analytics: {
+      type: "boolean",
+      shortFlag: 'a'
     }
   }
 });

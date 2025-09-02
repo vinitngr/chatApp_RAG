@@ -41,12 +41,16 @@ export async function handleShow(input, flags) {
         try {
             console.log(flags);
             const  token  = loadSession().token || flags.token || '';
-            const res = await axios.get(`http://localhost:3000/api/personas/${personaName}/data?token=${token}`);
+            const res = await axios.get(`http://localhost:3000/api/personas/${personaName}/data?token=${token}&analytics=${flags.analytics || false}`);
             const sources = res.data?.sources?.[0]?.[0]?.contentArray || [];
+            const analytics = res.data?.analytics;
             console.log(`Sources for ${personaName}:`);
             console.log(`=============================`);
             sources.forEach(s => console.log(`- ${s.type}: ${s.url}`));
             console.log(`=============================`);
+            console.log(`Analytics: ${JSON.stringify(analytics)}`);
+            console.log(`=============================`);
+
         } catch (error) {
             console.error('Failed to fetch data sources:', error.message);
         }

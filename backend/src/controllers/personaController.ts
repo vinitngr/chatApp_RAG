@@ -21,7 +21,7 @@ declare module "express-serve-static-core" {
 }
 
 export const createPersona = async (req: Request, res: Response) => {
-  let { personaName, isPublic = true, token , text } = req.body;
+  let { personaName, isPublic = true, token, text } = req.body;
 
   const files = req.files as Express.Multer.File[];
   const user = res.locals.user;
@@ -229,13 +229,24 @@ export const queryPersona = async (req: Request, res: Response) => {
       success: false,
     });
   }
+  try {
+    await fetch(
+      `${process.env.analyticURL}/${personaName}/analytics?type=aiquery&token=${result.usage_metadata?.total_tokens || 0}`,
+      {
+        method: "POST",
+      }
+    );
+  } catch (error) {
+    console.log("something wrong with analytics api");
+  }
+
   res.status(200).json({ answer: result, success: true });
 };
 
 export const getPersonaData = async (req: Request, res: Response) => {
   const personaName = req.params.id;
   const token = req.query.token;
-
+  const analytics = req.query.analytics;
   // TODO: Implement memory storage to prevent API calls
   const personaSources = await db
     .select()
@@ -254,7 +265,28 @@ export const getPersonaData = async (req: Request, res: Response) => {
       .status(401)
       .json({ message: "Unauthorized require Token to access" });
 
-  res.status(200).json({ sources: [personaSources] });
+  try {
+    await fetch(
+      `${process.env.analyticURL}/${personaName}/analytics?type=contentfetched`,
+      {
+        method: "POST",
+      }
+    );
+  } catch (error) {
+    console.log("something wrong with analytics api");
+  }
+  let analyticsResult ;
+  if (analytics == "true") {
+    try {
+      const res = await fetch(`${process.env.analyticURL}/${personaName}/analytics` , { method: "GET" });
+      analyticsResult = await res.json();
+    } catch (error) {
+      console.log("something wrong with analytics api");
+    }
+  }
+  console.log("analyticsResult" , analyticsResult);
+
+  res.status(200).json({ sources: [personaSources], analytics: analyticsResult });
 };
 
 export function processContentFXN(content: string) {
