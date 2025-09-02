@@ -1,0 +1,23 @@
+create boiler plate code using the-great-g-stack , prompt available in root file
+
+tggs created me readme.md made multiple refactor to it to have correct required guide
+
+used the-great-g-stack to get props/args out of terminal command line , use meow package for parsing
+
+user ai to fix out some complex typescript type error
+
+used chatgpt for regex parsing
+
+used chatgpt to debug multer error
+
+used chatgpt for ejs ui setup
+
+used chatgpt and docs to implement multer feature as its been long time i worked with multer
+
+took help of chatgpt to generate gramatically correct prompt and to enhance prompt
+
+used chatgpt to create transcription API , video to text
+
+tooks help of chatgpt for readline and session implementation
+
+tooks help of chatgpt to create me workers serverless function

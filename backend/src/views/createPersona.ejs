@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Persona</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-md">
+
+    <!-- Auth Section -->
+    <div id="authSection" class="bg-white shadow-md rounded p-6 space-y-6" style="display:none;">
+      <h2 class="text-2xl font-bold text-center">Login</h2>
+      <form id="loginForm" class="space-y-4">
+        <input type="email" name="email" placeholder="Email" required class="w-full p-2 border rounded">
+        <input type="password" name="password" placeholder="Password" required class="w-full p-2 border rounded">
+        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Login</button>
+      </form>
+
+      <h2 class="text-2xl font-bold text-center mt-4">Signup</h2>
+      <form id="signupForm" class="space-y-4">
+        <input type="text" name="username" placeholder="Display Name" class="w-full p-2 border rounded">
+        <input type="email" name="email" placeholder="Email" required class="w-full p-2 border rounded">
+        <input type="password" name="password" placeholder="Password" required class="w-full p-2 border rounded">
+        <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Signup</button>
+      </form>
+    </div>
+
+    <div id="personaSection" class="bg-white shadow-md rounded p-6 space-y-6" style="display:none;">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Create Persona</h1>
+        <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+      </div>
+
+      <form id="personaForm" enctype="multipart/form-data" class="space-y-4">
+        <input type="text" id="personaName" name="personaName" placeholder="Persona Name" required class="w-full p-2 border rounded">
+        <input type="password" id="token" name="token" placeholder="Token" class="w-full p-2 border rounded">
+        
+        <textarea id="text" name="text" placeholder="Enter text" rows="4" class="w-full p-2 border rounded h-46"></textarea>
+        
+        <p>public</p>
+        <select id="isPublic" name="isPublic" class="w-full p-2 border rounded">
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+        <input type="file" id="files" name="files" multiple accept=".pdf,image/*,video/*" class="w-full">
+        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Create Persona</button>
+      </form>
+
+      <h2 class="text-xl font-semibold mt-4">Result</h2>
+      <pre id="result" class="bg-gray-100 p-2 rounded text-sm break-words whitespace-pre-wrap"></pre>
+    </div>
+
+  </div>
+
+  <script>
+    async function checkAuth() {
+      try {
+        const res = await fetch("/api/auth/checkAuth");
+        if (res.ok) {
+          document.getElementById("personaSection").style.display = "block";
+        } else {
+          document.getElementById("authSection").style.display = "block";
+        }
+      } catch {
+        document.getElementById("authSection").style.display = "block";
+      }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) location.reload();
+      else alert(res.statusText);
+    });
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) location.reload();
+      else alert("Signup failed");
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      const res = await fetch("/api/auth/logout");
+      if (res.ok) location.reload();
+    });
+
+    document.getElementById("personaForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      try {
+        const response = await fetch("/api/personas/", { method: "POST", body: formData });
+        const data = await response.json();
+        document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById("result").textContent = "Error: " + err.message;
+      }
+    });
+
+    checkAuth();
+  </script>
+</body>
+</html>

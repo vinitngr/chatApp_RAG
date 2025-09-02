@@ -1,0 +1,11 @@
+{
+  "name": "analytics-api",
+  "main": "src/index.js",
+  "compatibility_date": "2025-07-24",
+  "kv_namespaces": [
+    {
+      "binding": "ANALYTICS",
+      "id": "62340d4739fe48049c124300d2d862cc"
+    }
+  ]
+}
