@@ -33,26 +33,6 @@ app.use('/api/auth',  authRoutes);
 app.use('/api/personas', personaRoutes);
 
 
-app.get("/dbstore", async (req, res) => {
-  try {
-    await db.insert(persona).values({
-      personaId: "23e5d29d-242e-457b-b17a-274f2a9f6edd",
-      createdBy: "23e5d29d-242e-457b-b17a-274f2a9f6ed3",
-      isPublic: true,
-      Token: "vinit",
-      personaName: "vinit ka persona",
-      contentArray: [
-        { type: "image", url: "1" },
-        { type: "video", url: "1" },
-        { type: "pdf", url: "1" },
-      ],
-    });
-    res.status(201).json({ message: "Persona stored successfully" });
-  } catch (err) {
-    res.status(500).json({ message: "Error storing persona", error: err });
-  }
-});
-
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
   res.status(500).send({ error: 'Something went wrong!' });
