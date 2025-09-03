@@ -2,6 +2,11 @@
 
 This project is a RAG-based backend with a CLI application to interact with it. It allows users to create 'personas' by uploading documents and then chat with these personas through the CLI.
 
+## Demo Video
+
+Watch a demo of the ChatApp in action:  
+[View Demo Video](https://drive.google.com/file/d/1iZ3ni2yg0JMDZ5G9jjyLCt97_SEU6A57/view)
+
 ## Project Structure
 
 - `/backend`: The Express.js/TypeScript backend API handling authentication, data processing, and RAG logic.
